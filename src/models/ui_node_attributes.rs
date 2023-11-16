@@ -11,7 +11,7 @@
 
 
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
-#[serde(tag = "nodetype")]
+#[serde(tag = "node_type")]
 pub enum UiNodeAttributes {
     #[serde(rename="a")]
     UiNodeAnchorAttributes {
