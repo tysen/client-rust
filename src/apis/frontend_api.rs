@@ -30,6 +30,16 @@ impl <T: Display + num_traits::Num> NumVecJoin for Vec<T> {
     }
 }
 
+macro_rules! creds {
+    ($builder:ident) => {
+        cfg_if::cfg_if!{
+            if #[cfg(target_arch = "wasm32")] {
+                $builder = $builder.fetch_credentials_include();
+            }
+        };
+    }
+}
+
 
 /// struct for typed errors of method `create_browser_login_flow`
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -335,6 +345,8 @@ pub async fn create_browser_login_flow(configuration: &configuration::Configurat
     let local_var_uri_str = format!("{}/self-service/login/browser", configuration.base_path);
     let mut local_var_req_builder = local_var_client.request(reqwest::Method::GET, local_var_uri_str.as_str());
 
+    creds!(local_var_req_builder);
+
     if let Some(ref local_var_str) = refresh {
         local_var_req_builder = local_var_req_builder.query(&[("refresh", local_var_str.to_string())]);
     }
@@ -380,6 +392,8 @@ pub async fn create_browser_logout_flow(configuration: &configuration::Configura
     let local_var_uri_str = format!("{}/self-service/logout/browser", configuration.base_path);
     let mut local_var_req_builder = local_var_client.request(reqwest::Method::GET, local_var_uri_str.as_str());
 
+    creds!(local_var_req_builder);
+
     if let Some(ref local_var_str) = return_to {
         local_var_req_builder = local_var_req_builder.query(&[("return_to", local_var_str.to_string())]);
     }
@@ -413,6 +427,8 @@ pub async fn create_browser_recovery_flow(configuration: &configuration::Configu
     let local_var_uri_str = format!("{}/self-service/recovery/browser", configuration.base_path);
     let mut local_var_req_builder = local_var_client.request(reqwest::Method::GET, local_var_uri_str.as_str());
 
+    creds!(local_var_req_builder);
+
     if let Some(ref local_var_str) = return_to {
         local_var_req_builder = local_var_req_builder.query(&[("return_to", local_var_str.to_string())]);
     }
@@ -442,6 +458,8 @@ pub async fn create_browser_registration_flow(configuration: &configuration::Con
 
     let local_var_uri_str = format!("{}/self-service/registration/browser", configuration.base_path);
     let mut local_var_req_builder = local_var_client.request(reqwest::Method::GET, local_var_uri_str.as_str());
+
+    creds!(local_var_req_builder);
 
     if let Some(ref local_var_str) = return_to {
         local_var_req_builder = local_var_req_builder.query(&[("return_to", local_var_str.to_string())]);
@@ -482,6 +500,8 @@ pub async fn create_browser_settings_flow(configuration: &configuration::Configu
     let local_var_uri_str = format!("{}/self-service/settings/browser", configuration.base_path);
     let mut local_var_req_builder = local_var_client.request(reqwest::Method::GET, local_var_uri_str.as_str());
 
+    creds!(local_var_req_builder);
+
     if let Some(ref local_var_str) = return_to {
         local_var_req_builder = local_var_req_builder.query(&[("return_to", local_var_str.to_string())]);
     }
@@ -514,6 +534,8 @@ pub async fn create_browser_verification_flow(configuration: &configuration::Con
 
     let local_var_uri_str = format!("{}/self-service/verification/browser", configuration.base_path);
     let mut local_var_req_builder = local_var_client.request(reqwest::Method::GET, local_var_uri_str.as_str());
+
+    creds!(local_var_req_builder);
 
     if let Some(ref local_var_str) = return_to {
         local_var_req_builder = local_var_req_builder.query(&[("return_to", local_var_str.to_string())]);
@@ -1084,6 +1106,8 @@ pub async fn to_session(configuration: &configuration::Configuration, x_session_
     let local_var_uri_str = format!("{}/sessions/whoami", configuration.base_path);
     let mut local_var_req_builder = local_var_client.request(reqwest::Method::GET, local_var_uri_str.as_str());
 
+    creds!(local_var_req_builder);
+
     if let Some(ref local_var_str) = tokenize_as {
         local_var_req_builder = local_var_req_builder.query(&[("tokenize_as", local_var_str.to_string())]);
     }
@@ -1120,6 +1144,8 @@ pub async fn update_login_flow(configuration: &configuration::Configuration, flo
     let local_var_uri_str = format!("{}/self-service/login", configuration.base_path);
     let mut local_var_req_builder = local_var_client.request(reqwest::Method::POST, local_var_uri_str.as_str());
 
+    creds!(local_var_req_builder);
+
     local_var_req_builder = local_var_req_builder.query(&[("flow", flow.to_string())]);
     if let Some(ref local_var_user_agent) = configuration.user_agent {
         local_var_req_builder = local_var_req_builder.header(reqwest::header::USER_AGENT, local_var_user_agent.clone());
@@ -1154,6 +1180,8 @@ pub async fn update_logout_flow(configuration: &configuration::Configuration, to
 
     let local_var_uri_str = format!("{}/self-service/logout", configuration.base_path);
     let mut local_var_req_builder = local_var_client.request(reqwest::Method::GET, local_var_uri_str.as_str());
+
+    creds!(local_var_req_builder);
 
     if let Some(ref local_var_str) = token {
         local_var_req_builder = local_var_req_builder.query(&[("token", local_var_str.to_string())]);
@@ -1191,6 +1219,8 @@ pub async fn update_recovery_flow(configuration: &configuration::Configuration, 
     let local_var_uri_str = format!("{}/self-service/recovery", configuration.base_path);
     let mut local_var_req_builder = local_var_client.request(reqwest::Method::POST, local_var_uri_str.as_str());
 
+    creds!(local_var_req_builder);
+
     local_var_req_builder = local_var_req_builder.query(&[("flow", flow.to_string())]);
     if let Some(ref local_var_str) = token {
         local_var_req_builder = local_var_req_builder.query(&[("token", local_var_str.to_string())]);
@@ -1226,6 +1256,8 @@ pub async fn update_registration_flow(configuration: &configuration::Configurati
     let local_var_uri_str = format!("{}/self-service/registration", configuration.base_path);
     let mut local_var_req_builder = local_var_client.request(reqwest::Method::POST, local_var_uri_str.as_str());
 
+    creds!(local_var_req_builder);
+
     local_var_req_builder = local_var_req_builder.query(&[("flow", flow.to_string())]);
     if let Some(ref local_var_user_agent) = configuration.user_agent {
         local_var_req_builder = local_var_req_builder.header(reqwest::header::USER_AGENT, local_var_user_agent.clone());
@@ -1257,6 +1289,8 @@ pub async fn update_settings_flow(configuration: &configuration::Configuration, 
 
     let local_var_uri_str = format!("{}/self-service/settings", configuration.base_path);
     let mut local_var_req_builder = local_var_client.request(reqwest::Method::POST, local_var_uri_str.as_str());
+
+    creds!(local_var_req_builder);
 
     local_var_req_builder = local_var_req_builder.query(&[("flow", flow.to_string())]);
     if let Some(ref local_var_user_agent) = configuration.user_agent {
@@ -1292,6 +1326,8 @@ pub async fn update_verification_flow(configuration: &configuration::Configurati
 
     let local_var_uri_str = format!("{}/self-service/verification", configuration.base_path);
     let mut local_var_req_builder = local_var_client.request(reqwest::Method::POST, local_var_uri_str.as_str());
+
+    creds!(local_var_req_builder);
 
     local_var_req_builder = local_var_req_builder.query(&[("flow", flow.to_string())]);
     if let Some(ref local_var_str) = token {
